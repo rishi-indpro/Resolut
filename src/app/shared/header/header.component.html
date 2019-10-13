@@ -1,0 +1,147 @@
+<app-loader [loader]="loading"></app-loader>
+<div class="row fixed" style="top: 0;z-index:9999999;" id="dvHeader">
+  <div class="stickyMenu" style="position:fixed">
+    <div>
+      <div class="headerFirstPart clearfix">
+        <div class="cornerH">
+          <a href="javascript:void(0)" (click)="goToArticlePage();">&nbsp;</a>
+        </div> <!-- cornerH -->
+        <div class="mobileCart" [ngClass]="showMobileMenu?'dpNone': '' ">
+          <!--dpNone-->
+          <a class="linkCart" (click)="goToCart();" href="javascript:void(0)">
+            <span class='badge badge-warning' id='lblMobileCartCount' [hidden]="this.numOnCart.articleNumberOnCart === 0 || this.numOnCart.articleNumberOnCart === null" *ngIf="this.numOnCart.articleNumberOnCart !== 0 || this.numOnCart.articleNumberOnCart !== null" [innerHTML]="this.numOnCart.articleNumberOnCart === 0 || this.numOnCart.articleNumberOnCart === null || this.numOnCart.articleNumberOnCart === undefined ? '' : this.numOnCart.articleNumberOnCart"></span>
+            <i class="fa fa-shopping-cart fa-1x" aria-hidden="true"></i>
+          </a>
+        </div> <!-- cartH -->
+        <div class="mobileMenu">
+          <a (click)="toggleMobileMenu()"><i class="fa fa-bars fa-2x" aria-hidden="true"></i></a>
+        </div> <!-- mobileMenu -->
+        <div class="headerMiddlePart" [ngClass]="showMobileMenu?'dpblk': '' ">
+          <!--dpblk-->
+          <div *ngIf="(userType === 'External')">
+            <div class="shopH">
+              Materialshop
+            </div> <!-- shopH -->
+          </div>
+          <div class="personalH" *ngIf="(userType === 'Internal')" [ngClass]="showMobileMenu?'dpblk': '' ">
+            <!--dpblk-->
+            <span class="dpblk">
+              <span class="subRedTxt red">Faktura till knr:</span>
+              <span class="subBlackTxt" [innerHTML]="userDetail?.InvoiceToCustomerID"></span>
+              <span class="red" [innerHTML]="InvoiceToUserName"></span>
+            </span>
+            <span class="dpblk mb5">
+              <span class="subRedTxt red">Leverans till knr:</span>
+              <span class="subBlackTxt" [innerHTML]="userDetail?.DeliverToCustomerID"></span>
+              <span class="red" [innerHTML]="DeliverToUserName"></span>&nbsp;
+              <span class="red" [innerHTML]="deliveryAddress"></span>
+            </span>
+          </div>
+          <!-- personalH -->
+        </div> <!-- headerMiddlePart -->
+        <nav [ngClass]="showMobileMenu?'dpblk': '' ">
+          <!--dpblk-->
+          <ul>
+            <li class="active">
+              <a href="javascript:void(0)">Säljinspiration & Tips</a>
+            </li>
+            <li>
+              <a #headerLink href="javascript:void(0)" (click)="toggleMenu();" (clickOutside)="onClickedOutside($event)"><span class="dropDown">Mina leveranser / Retur / Reklamation</span></a>
+              <ul class="leveranserWidth" *ngIf="toggleDropdownMenu">
+                <li (click)="toggleMenu();"><a href="javascript:void(0)" routerLinkActive="active" (click)="gotToManualOrder()">Beställt material</a></li>
+                <li (click)="toggleMenu();"><a href="javascript:void(0)" routerLinkActive="active" (click)="gotToAutoOrder()">Autoutskick</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="javascript:void(0)" style="cursor:pointer;" (click)="ShowMoreInfoTextPopup();">Leveransvillkor & Information</a>
+            </li>
+            <li>
+              <div class="cartH">
+                <a class="cart" (click)="goToCart();" href="javascript:void(0)">
+                  <span class='badge badge-warning' id='lblCartCount' [hidden]="this.numOnCart.articleNumberOnCart === 0 || this.numOnCart.articleNumberOnCart === null" *ngIf="this.numOnCart.articleNumberOnCart !== 0 || this.numOnCart.articleNumberOnCart !== null" [innerHTML]="this.numOnCart.articleNumberOnCart === 0 || this.numOnCart.articleNumberOnCart === null || this.numOnCart.articleNumberOnCart === undefined ? '' : this.numOnCart.articleNumberOnCart"></span>
+                  <i class="fa fa-shopping-cart fa-lg" aria-hidden="true"></i>
+                  VARUKORG
+                </a>
+              </div> <!-- cartH -->
+            </li>
+          </ul>
+        </nav> <!-- center-block -->
+      </div> <!-- headerFirstPart -->
+      <div class="headerSecondPart clearfix" [hidden]="!loadArticleHeader" [ngClass]="showMobileMenu && url=='/Article'?'dpblk': '' ">
+        <!--dpblk-->
+        <div class="continer-fluid">
+          <div class="clearfix">
+            <div class="col-sm-12 col-md-12 col-lg-4">
+              <div class="searchH">
+                <button type="button" class="searchBtn" (click)="filterArticleByStringParam(search.value);" style="border-right: 5px solid red;">
+                  <span class="fa fa-search fa-lg"></span>
+                </button>
+                <input #search type="text" placeholder="Sök artikel" id="elasticSearchInput" (input)="AddSearch($event.target.value)" [(ngModel)]="searchText" />
+              </div>
+            </div>
+            <div class="topFilters">
+              <ul class="filterH">
+                <li class="col-xs-12 col-sm-12 col-md-6 col-lg-2" #topFilters>
+                  <a href="javascript:void(0)" (click)="showFilterMenu($event);">Kuponger, programblad, kvittorullar</a>
+                  <ul>
+                    <li [hidden]="hideCouponMatchbundetMaterial"><a href="javascript:void(0)" (click)="filterArticleByMenu(1, null, null, null, null);">Matchbundet material</a></li>
+                    <li [hidden]="hideCouponNeutralaKuponger"><a href="javascript:void(0)" (click)="filterArticleByMenu(2, null, null, null, null);">Neutrala kuponger</a></li>
+                    <li [hidden]="hideCouponKvittorullar"><a href="javascript:void(0)" (click)="filterArticleByMenu(3, null, null, null, null);">Kvittorullar</a></li>
+                  </ul>
+                </li> <!-- col-lg-2 -->
+                <li class="col-xs-12 col-sm-12 col-md-6 col-lg-2" #topFilters>
+                  <a href="javascript:void(0)" (click)="showFilterMenu($event);">Kampanjer</a>
+                  <ul [ngStyle]="{'height': setMenuFilterHeight(compaignDetail), 'overflow-y': setMenuFilterOverFlow(compaignDetail)}">
+                    <li *ngFor="let compaign of compaignDetail"><a href="javascript:void(0)" (click)="filterArticleByMenu('', compaign.Campaign, null, null, null);" [innerHTML]="compaign.CampaignDescription !== null ? compaign.CampaignDescription : ''"></a></li>
+                  </ul>
+                </li> <!-- col-lg-2 -->
+                <li class="col-xs-12 col-sm-12 col-md-6 col-lg-2" #topFilters>
+                  <a href="javascript:void(0)" (click)="showFilterMenu($event);">Speltyp</a>
+                  <ul [ngStyle]="{'height': setMenuFilterHeight(productFamilyDetail), 'overflow-y': setMenuFilterOverFlow(productFamilyDetail)}">
+                    <li *ngFor="let product of productFamilyDetail"><a href="javascript:void(0)" (click)="filterArticleByMenu(null, null, product, null, null);">{{product.split(';')[1]}}</a></li>
+                  </ul>
+                </li> <!-- col-lg-2 -->
+                <li class="col-xs-12 col-sm-12 col-md-6 col-lg-2" #topFilters>
+                  <a href="javascript:void(0)" (click)="showFilterMenu($event);">Artikeltyp/placering</a>
+                  <ul [ngStyle]="{'height': setMenuFilterHeight(profileDetail), 'overflow-y': setMenuFilterOverFlow(profileDetail)}">
+                    <li *ngFor="let profile of profileDetail"><a href="javascript:void(0)" (click)="filterArticleByMenu(null, null, null,profile, null);" [innerHTML]="profile !== null ? profile : ''"></a></li>
+                  </ul>
+                </li> <!-- col-xs-12 col-sm-6 col-lg-2 -->
+              </ul>
+            </div> <!-- topFilter -->
+          </div>
+        </div>
+      </div>  <!-- topMenu -->
+      <div class="topInfo" *ngIf="loadArticleHeader">
+        <div class="container-fluid">
+          <div class="{{noteTextPart !== undefined ? (noteTextPart.NoteText === '' || noteTextPart.NoteText === null ? 'hideBannerRow' : 'row') : 'hideBannerRow'}}">
+            <div class="row" *ngIf="noteTextPart">
+              <div class="thinBanner">
+                <div class="container-fluid">
+                  <div class="row">
+                    <marquee duration="15000" gap="50" delayBeforeStart="0" direction="left" data-duplicated="true" [innerHTML]="noteTextPart?.NoteText !== null ? noteTextPart?.NoteText : ''"></marquee>
+                  </div> <!-- row -->
+                </div> <!-- container-fluid -->
+              </div> <!-- thinBanner -->
+            </div> <!-- row -->
+          </div>
+          <div class="" *ngIf="loadArticleHeader">
+            <div class="col-xs-5 col-xs-offset-0 col-md-5 col-md-offset-1">
+              <div class="heading">
+                <h1 class="nobdColor mt10 ml0"></h1>
+              </div> <!-- heading -->
+            </div> <!-- col-md-6-->
+            <div class="col-md-5">
+              <div class="sortByH">
+                <a class="colGrid" [ngClass]="showArticleTblView === 'true'? 'act': ''" (click)="changeArticleListView('false')"><i class="fa fa-th fa-lg"></i> Bilder</a>&nbsp;&nbsp;
+                <a class="rowGrid" [ngClass]="showArticleTblView === 'false'? 'act': ''" (click)="changeArticleListView('true')"><i class="fa fa-th-list fa-lg"></i> Rader</a>
+              </div> <!-- sortByH -->
+            </div> <!-- col-md-6 -->
+          </div> <!-- row -->
+        </div> <!-- container-fluid -->
+      </div> <!-- topInfo -->
+    </div>
+    <div class="row bdgray" style="height:10px;">
+    </div>
+  </div>
+</div>

@@ -1,0 +1,131 @@
+.containerH {
+  margin:0 auto;
+  padding:0 10px;
+ }
+
+// Source: http://nicolasgallagher.com/micro-clearfix-hack/
+.rowH {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+// Clearfix
+.clearfix {
+  @extend .rowH;
+}
+
+@media only screen and (min-width:480px){
+  .containerH {
+    width:450px;
+  }
+}
+
+@media only screen and (min-width:768px){
+  .containerH {
+    width:750px;
+  }
+}
+
+@media only screen and (min-width:980px){
+  .containerH {
+    width:960px;
+  }
+}
+
+@media only screen and (min-width:1200px){
+  .containerH {
+    width:1170px;
+  }
+}
+
+$num_of_grid:12;
+
+@for $i from 1 through $num_of_grid  {
+  .col-mobile-#{$i}{
+    position:relative;
+    float:left;
+    min-height:1%;
+  }
+}
+
+@for $i from 1 through $num_of_grid {
+  .col-mobile-#{$i}{
+    width: $i / $num_of_grid * 100%;
+  }
+}
+
+@media only screen and (min-width:450px){
+
+  @for $i from 1 through $num_of_grid  {
+    .col-large-mobile-#{$i}{
+      position:relative;
+      float:left;
+      min-height:1%;
+    }
+  }
+
+  @for $i from 1 through $num_of_grid {
+    .col-large-mobile-#{$i}{
+      width: $i / $num_of_grid * 100%;
+    }
+  }
+
+}
+@media only screen and (min-width:768px){
+
+  @for $i from 1 through $num_of_grid  {
+    .col-ipad-#{$i}{
+      position:relative;
+      float:left;
+      min-height:1px;
+    }
+  }
+
+  @for $i from 1 through $num_of_grid {
+    .col-ipad-#{$i}{
+      width: $i / $num_of_grid * 100%;
+    }
+  }
+
+}
+
+@media only screen and (min-width:980px){
+
+  @for $i from 1 through $num_of_grid  {
+    .col-pc-#{$i}{
+      position:relative;
+      float:left;
+      min-height:1px;
+    }
+  }
+
+  @for $i from 1 through $num_of_grid {
+    .col-pc-#{$i}{
+      width: $i / $num_of_grid * 100%;
+    }
+  }
+}
+
+@media only screen and (min-width:1200px){
+  @for $i from 1 through $num_of_grid  {
+    .col-large-pc-#{$i}{
+      position:relative;
+      float:left;
+      min-height:1px;
+    }
+  }
+
+  @for $i from 1 through $num_of_grid {
+    .col-large-pc-#{$i}{
+      width: $i / $num_of_grid * 100%;
+    }
+  }
+}
+
+

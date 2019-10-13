@@ -10,7 +10,7 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('ResolutWebshopSPA app is running!');
+    expect(page.getTitleText()).toEqual('ResoluteApp app is running!');
   });
 
   afterEach(async () => {

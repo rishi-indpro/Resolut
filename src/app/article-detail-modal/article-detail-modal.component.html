@@ -1,0 +1,86 @@
+<div class="modalWidth">
+    <div class="modal-header noPadding">
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalCloseRef.hide()">
+        <span aria-hidden="true">
+          <img class="fa fa-times modal-header-cross-button" src="../../assets/images/close-modal.png" />
+        </span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="productDetailH">
+              <!--<div class="half-width pull-left">-->
+              <div class="col-sm-5">
+                <!--col-sm-6-->
+                <div class="imgH">
+                  <img [src]="articleDetail?.LowresPath" alt="" class="imageView" />
+                </div>
+              </div>
+              <div class="col-sm-7 pull-left title">
+                <!--<div class="half-width pull-left">-->
+                <!--col-sm-6-->
+                <div class="headingSub">
+                  <h1>{{articleDetail?.ArticleDescription}} (Art.nr. {{articleDetail?.ArticleNumber}})</h1>
+                </div> <!-- heading -->
+                <div class="productAll">
+                  <span class="dpblk qualityH text-left">
+                    <span class="splPriceH">Á-pris:</span>
+                    <span class="splPriceH red">
+                      {{articleDetail?.Price == 0? 0: articleDetail?.Price | number:'1.2-2'}} {{articleDetail?.Price == 0? ' kr': ' kr exkl. moms'}}
+                    </span>
+                  </span>
+                  <span class="qualityH">
+                    <span class="splPriceH">Antal:</span>
+                    <button href="javascript:void(0)" (mouseout)="saveArticleInfo(articleDetail)" class="pmTopBtn incrementDecrementButton" (click)="AddArticleToCart(articleDetail?.ArticleGuid);" [disabled]="(((userType != 'Internal') && articleDetail?.NumOfQuantity >= articleDetail?.MaxQtyPart) || (articleDetail?.Stock == 0))"><i class="fa fa-plus-square fa-2x" aria-hidden="true" [ngClass]="((userType != 'Internal') && articleDetail?.NumOfQuantity >= articleDetail?.MaxQtyPart)? (articleDetail?.Stock == 0?  'plusdeActive': 'plusdeActive'): (articleDetail?.Stock == 0?  'plusdeActive': '')"></i></button>
+                    <input type="text" class="qualityCount"
+                           [value]="((articleDetail?.NumOfQuantity == '') || (articleDetail?.NumOfQuantity == undefined)) ? 0 : articleDetail?.NumOfQuantity"
+                           placeholder="" (input)="UpdateArticleToCart(articleDetail?.ArticleGuid, $event.target.value == '' || $event.target.value == undefined? 0: $event.target.value,$event);"
+                           (focusout)="inputFocusOut($event, articleDetail)" [disabled]="articleDetail?.Stock == 0" />
+                    <button href="javascript:void(0)" (mouseout)="saveArticleInfo(articleDetail)" class="pmBottomBtn incrementDecrementButton" (click)="DeleteArticleFromCart(articleDetail?.ArticleGuid);"><i [ngClass]="{'minusdeActive' : articleDetail?.NumOfQuantity == 0}" class="fa fa-minus-square fa-2x" aria-hidden="true"></i></button>
+                    <span class="qualityTxt qualitySpl" [innerHTML]="articleDetail?.Unit"></span>
+                  </span>
+                  <span class="dpblk qualityH text-left" *ngIf="(userType == 'Internal')">
+                    <span class="splPriceH">Max antal:</span>
+                    <span class="qualityTxt" [innerHTML]="articleDetail?.MaxQtyPart"></span>
+                  </span>
+                  <span class="dpblk qualityH text-left" *ngIf="(userType == 'Internal')">
+                    <span class="splPriceH">Lagersaldo:</span>
+                    <span class="qualityTxt" [innerHTML]="articleDetail?.Stock"></span>
+                  </span>
+                  <span class="dpblk qualityH text-left" *ngIf="(userType == 'Internal')">
+                    <span class="splPriceH" [innerHTML]="articleDetail?.AllowedOrderBy == 'P' ? 'Begränsningar:' : ''"></span>
+                    <span class="qualityTxt redColor" [innerHTML]="articleDetail?.AllowedOrderBy == 'P' ? 'Endast via personal' : ''"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <toaster-container [toasterconfig]="toasterConfig"></toaster-container>
+  
+      <ng-template #templateConfirm>
+        <div class="modal-body text-center">
+          <p [innerHTML]="msgTempConfirmText"></p>
+          <button type="button" class="btn btn-primary" (click)="confirm()">JA</button>
+          <button type="button" class="btn btn-default" (click)="decline()">NEJ</button>
+        </div>
+      </ng-template>
+    </div>
+    <div class="modal-footer-text">
+      <div class="col-sm-5">
+      </div>
+      <div class="col-sm-7">
+        <!--<p [innerHTML]="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.
+        Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+        Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
+        Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.
+        In enim justo, rhoncus ut, imperdiet a"></p>-->
+        <p [innerHTML]="articleDetail?.DetailedDescription == null ? '' : articleDetail?.DetailedDescription"></p>
+      </div>
+    </div>
+  </div>
+  

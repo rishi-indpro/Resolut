@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ResolutWebshopSPA": {
+    "ResoluteApp": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ResolutWebshopSPA",
+            "outputPath": "dist/ResoluteApp",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -24,9 +24,22 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+              "./node_modules/font-awesome/css/font-awesome.min.css",
+              "./node_modules/angular2-toaster/toaster.css",
+              "src/styles.css",
+              "src/assets/css/font-awesome.min.css",
+              "src/assets/css/custom.css",
+              "src/assets/css/jquery-ui.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "src/assets/js/jquery.marquee.min.js",
+              "src/assets/js/gui.js",
+              "src/assets/js/jquery-ui.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -57,24 +70,30 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "es5": {
+              "tsConfig": "./tsconfig-es5.app.json"
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ResolutWebshopSPA:build"
+            "browserTarget": "ResoluteApp:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ResolutWebshopSPA:build:production"
+              "browserTarget": "ResoluteApp:build:production"
+            },
+            "es5": {
+              "browserTarget": "yourAppName:build:es5"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ResolutWebshopSPA:build"
+            "browserTarget": "ResoluteApp:build"
           }
         },
         "test": {
@@ -89,9 +108,21 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+              "./node_modules/font-awesome/css/font-awesome.min.css",
+              "./node_modules/angular2-toaster/toaster.css",
+              "src/styles.css",
+              "src/assets/css/font-awesome.min.css",
+              "src/assets/css/custom.css",
+              "src/assets/css/jquery-ui.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "src/assets/js/jquery.marquee.min.js",
+              "src/assets/js/gui.js",
+              "src/assets/js/jquery-ui.js"
+            ]
           }
         },
         "lint": {
@@ -111,15 +142,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "ResolutWebshopSPA:serve"
+            "devServerTarget": "ResoluteApp:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ResolutWebshopSPA:serve:production"
+              "devServerTarget": "ResoluteApp:serve:production"
             }
           }
         }
       }
-    }},
-  "defaultProject": "ResolutWebshopSPA"
+    }
+  },
+  "defaultProject": "ResoluteApp"
 }

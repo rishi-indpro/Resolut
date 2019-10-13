@@ -1,0 +1,41 @@
+/* Rounded border */
+
+@mixin roundBorder($width){
+  -webkit-border-radius:$width;
+  -moz-border-radius:$width;
+  border-radius:$width;
+}
+
+@mixin textShadow  {
+  text-shadow: 0px 0px 1px #000000;
+}
+
+@mixin transition($sec) {
+  -webkit-transition: all $sec ease;
+  -moz-transition: all $sec ease;
+   transition: all $sec ease;
+}
+
+@mixin menuTransition($tranSec) {
+  -webkit-transition: transform $tranSec ease;
+  -moz-transition: transform $tranSec ease;
+  transition: transform $tranSec ease;
+}
+
+@mixin scale($x, $y){
+  -webkit-transform:scale($x, $y);
+  -moz-transform:scale($x, $y);
+  transform:scale($x, $y);
+}
+
+@mixin rotate($degree){
+  -webkit-transform:rotate($degree);
+  -moz-transform:rotate($degree);
+  transform:rotate($degree);
+}
+
+@mixin translate($tran){
+  -webkit-transform:translateY($tran);
+  -moz-transform:translateY($tran);
+  transform:translateY($tran);
+}
