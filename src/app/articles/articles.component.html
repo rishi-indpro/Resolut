@@ -2,41 +2,24 @@
   <div class="row">
     <div class="container-fluid pt5 mainContainerForArticles">
       <div class="row">
-        <div class="row" *ngIf="showArticleTblView === 'true'">
+        <div class="row">
           <div class="col-lg-12">
             <div class="table-responsive splNoBorder" #listHeaderParent>
               <div class="listHeader" style="width:100%;">
-                <table class="table gridTablerow" [ngClass]="(userType == 'Internal')?'eight-column':'five-column' ">
-                  <tr class="fixedTr">
-                    <td>&nbsp;</td>
-                    <td>Beskrivning</td>
-                    <td>Art.nr.</td>
-                    <td>Antal</td>
-                    <td [hidden]="(userType != 'Internal')" class="text-right">Max antal</td>
-                    <td class="text-right">Á-pris EXKL. MOMS&nbsp;&nbsp;</td>
-                    <td [hidden]="(userType != 'Internal')" class="text-right">Lagersaldo</td>
-                    <td colspan="2" class="" [hidden]="(userType != 'Internal')">Begränsningar</td>
-                  </tr>
-                </table>
               </div> <!-- listHeader -->
-
             </div>
           </div> <!-- col-lg-12 -->
-        </div> <!-- row -->
-        <div class="colBoxView">
-          <ng-container>
+        </div>  <!-- row -->
+        <div class="colBoxView" *ngIf="(articleDetail?.length > 0)">
+          <ng-container *ngIf="articleDetail?.length > 0">
             <div class="row">
-              <div *ngFor="let article of articleDetail; let i=index; trackBy: trackByFunction"
-                class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+              <div *ngFor="let article of articleDetail; let i=index; trackBy: trackByFunction" class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
                 <div class="featuredBox">
                   <div class="roundImg">
                     <div class="responsive-container">
-                      <a class="img-container" tabindex="-1" (click)="openArticleDetailModal(article);"
-                        style="cursor:pointer">
+                      <a class="img-container" tabindex="-1" (click)="openArticleDetailModal(article);" style="cursor:pointer">
                         <img [src]="article.DetailedPath" alt="" />
-                        <span class="moreInfoTxt"
-                          *ngIf="article.DetailedDescription !== '' && article.DetailedDescription !== null">Mer
-                          info</span>
+                        <span class="moreInfoTxt" *ngIf="article.DetailedDescription !== '' && article.DetailedDescription !== null">Mer info</span>
                       </a>
                     </div>
                     <div class="detailsH" [ngStyle]="{'min-height':userType != 'Internal' ? 'auto' : '' }">
@@ -53,37 +36,23 @@
                         <span class="qualityH" style="clear: both;">
                           <span class="qualityHead">Art.nr.: </span>
                           <span class="qualityTxt" [innerHTML]="article.ArticleNumber"></span>&nbsp;&nbsp;
-                          <!-- <a href="javascript:void(0)" tabIndex="-1" *ngIf="article.Stock === 0"
-                            class="fa fa-info-circle redColor" aria-hidden="true"
-                            popover="{{article.PlannedDelivaryDate == null ? 'Ny lev.tid ej bekräftad': 'Åter beställningsbar ' + (article.PlannedDelivaryDate | date:'yyyy-MM-dd')}}"
-                            placement="top" data-toggle="popover" data-placement="top" triggers="focus"></a> -->
+                          <a href="javascript:void(0)" tabIndex="-1" *ngIf="article.Stock === 0" class="fa fa-info-circle redColor" aria-hidden="true"
+                             popover="{{article.PlannedDelivaryDate == null ? 'Ny lev.tid ej bekräftad': 'Åter beställningsbar ' + (article.PlannedDelivaryDate | date:'yyyy-MM-dd')}}"
+                             placement="top" data-toggle="popover" data-placement="top" triggers="focus"></a>
                         </span>
                       </div>
                       <span class="dpblk qualityH text-left">
                         <span class="qualityHead">Pris: </span>
-                        <span class="currencyTxt red"
-                          [innerHTML]="article.Price == 0? 0: article.Price | number:'1.2-2'"></span><span
-                          class="currencyTxt red" [innerHTML]="article.Price == 0? ' kr': ' kr exkl. moms'"></span>
+                        <span class="currencyTxt red" [innerHTML]="article.Price == 0? 0: article.Price | number:'1.2-2' | noComma"></span><span class="currencyTxt red" [innerHTML]="article.Price == 0? ' kr': ' kr exkl. moms'"></span>
                       </span>
                       <span class="qualityH firstSpan">
                         <span class="qualityHead">Antal: </span>
-                        <button href="javascript:void(0)" class="pmTopBtn incrementDecrementButton"
-                          (click)="AddArticleToCart(article.ArticleGuid);"
-                          (mouseout)="saveArticleInfo(article.ArticleGuid)"
-                          [disabled]="(((userType != 'Internal') && article.NumOfQuantity >= article.MaxQtyPart) || (article.Stock == 0))"><i
-                            class="fa fa-plus-square fa-2x" aria-hidden="true"
-                            [ngClass]="((userType != 'Internal') && article.NumOfQuantity >= article.MaxQtyPart)? (article.Stock == 0?  'plusdeActive': 'plusdeActive'): (article.Stock == 0?  'plusdeActive': '')"></i></button>
+                        <button href="javascript:void(0)" class="pmTopBtn incrementDecrementButton" (click)="AddArticleToCart(article.ArticleGuid);" (mouseout)="saveArticleInfo(article.ArticleGuid)" [disabled]="(((userType != 'Internal') && article.NumOfQuantity >= article.MaxQtyPart) || (article.Stock == 0))"><i class="fa fa-plus-square fa-2x" aria-hidden="true" [ngClass]="((userType != 'Internal') && article.NumOfQuantity >= article.MaxQtyPart)? (article.Stock == 0?  'plusdeActive': 'plusdeActive'): (article.Stock == 0?  'plusdeActive': '')"></i></button>
                         <input type="text" [tabindex]="(row*5)+i+1" class="qualityCount"
-                          [value]="(article.NumOfQuantity == '' || article.NumOfQuantity == undefined)? 0 : article.NumOfQuantity"
-                          placeholder=""
-                          (input)="UpdateArticleToCart(article.ArticleGuid, $event.target.value == '' || $event.target.value == undefined? 0: $event.target.value,$event);"
-                          (focusout)="inputFocusOut($event, article)" [disabled]="article.Stock == 0" />
-                        <button href="javascript:void(0)" class="pmBottomBtn incrementDecrementButton"
-                          (mouseout)="saveArticleInfo(article.ArticleGuid)"
-                          (click)="DeleteArticleFromCart(article.ArticleGuid);"
-                          [disabled]="article.NumOfQuantity <= 0"><i
-                            [ngClass]="{'minusdeActive' : article.NumOfQuantity == 0}" class="fa fa-minus-square fa-2x"
-                            aria-hidden="true"></i></button>
+                               [value]="(article.NumOfQuantity == '' || article.NumOfQuantity == undefined)? 0 : article.NumOfQuantity"
+                               placeholder="" (input)="UpdateArticleToCart(article.ArticleGuid, $event.target.value == '' || $event.target.value == undefined? 0: $event.target.value,$event);"
+                               (focusout)="inputFocusOut($event, article)" [disabled]="article.Stock == 0" />
+                        <button href="javascript:void(0)" class="pmBottomBtn incrementDecrementButton" (mouseout)="saveArticleInfo(article.ArticleGuid)" (click)="DeleteArticleFromCart(article.ArticleGuid);" [disabled]="article.NumOfQuantity <= 0"><i [ngClass]="{'minusdeActive' : article.NumOfQuantity == 0}" class="fa fa-minus-square fa-2x" aria-hidden="true"></i></button>
                         <span class="qualityTxt qualitySpl" [innerHTML]="article.Unit"></span>
                       </span>
                       <div [hidden]="(userType != 'Internal')">
@@ -94,29 +63,35 @@
                         <span class="qualityH">
                           <span class="qualityHead">Lagersaldo: </span>
                           <span class="notAvail" [innerHTML]="article.Stock"></span>&nbsp;&nbsp;&nbsp;
-                          <!-- <a href="javascript:void(0)" tabindex="-1" *ngIf="article.Stock === 0"
-                            class="fa fa-info-circle redColor" aria-hidden="true"
-                            popover="{{article.PlannedDelivaryDate == null ? 'Ny lev.tid ej bekräftad': 'Åter beställningsbar ' + (article.PlannedDelivaryDate | date:'yyyy-MM-dd')}}"
-                            placement="auto" data-toggle="popover" data-placement="auto" data-container="body"
-                            triggers="focus"></a> -->
+                          <a href="javascript:void(0)" tabindex="-1" *ngIf="article.Stock === 0" class="fa fa-info-circle redColor" aria-hidden="true"
+                             popover="{{article.PlannedDelivaryDate == null ? 'Ny lev.tid ej bekräftad': 'Åter beställningsbar ' + (article.PlannedDelivaryDate | date:'yyyy-MM-dd')}}"
+                             placement="auto" data-toggle="popover" data-placement="auto" data-container="body" triggers="focus"></a>
                         </span>
                         <span class="qualityH wid200">
                           <span class="qualityHead" [hidden]="article.AllowedOrderBy == 'P'">&nbsp;</span>
-                          <span class="fontSize14 redColor"
-                            [innerHTML]="article.AllowedOrderBy == 'P' ? 'Endast via personal' : ''"></span>
+                          <span class="fontSize14 redColor" [innerHTML]="article.AllowedOrderBy == 'P' ? 'Endast via personal' : ''"></span>
                         </span>
                       </div>
                     </div> <!-- detailsH -->
                   </div> <!-- roundImg -->
                 </div> <!-- featuredBox -->
               </div>
-              <div>
-                <button type="button" class="greenBtn fontSize14" (click)="ViewMoreArticles()">View more</button>
-              </div>
             </div>
           </ng-container>
         </div> <!-- colBoxView -->
+        <div class="col-lg-12" *ngIf="showViewMoreButton === true">
+          <button type="button" class="fontSize14 ViewMore" (click)="ViewMoreArticles()">View more</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
+<toaster-container [toasterconfig]="toasterConfig"></toaster-container>
+
+<ng-template #templateConfirm>
+  <div class="modal-body text-center">
+    <p [innerHTML]="msgTempConfirmText"></p>
+    <button type="button" class="btn btn-primary" (click)="confirm()">JA</button>
+    <button type="button" class="btn btn-default" (click)="decline()">NEJ</button>
+  </div>
+</ng-template>

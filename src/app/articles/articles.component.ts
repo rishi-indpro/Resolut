@@ -98,7 +98,7 @@ export class ArticlesComponent implements OnInit {
     // Red dropdown filters
     this.filterArticlesByParameter = this.articleService.filterArticlesByParameter.subscribe(x => {
       if (!(Object.keys(x).length === 0 && x.constructor === Object)) {
-        // this.ShowArticles(x['couponFilter'], x['campaignFilter'], x['productFamilyFilter'], x['profileFilter'], x['searchArticle']);
+         this.ShowArticles(x['couponFilter'], x['campaignFilter'], x['productFamilyFilter'], x['profileFilter'], x['searchArticle']);
       }
     });
 
@@ -117,18 +117,18 @@ export class ArticlesComponent implements OnInit {
     if (e.url === '/Article') {
       this.getArticleDetails();
     }
-    // this.getUpdateForSaldo();
+     this.getUpdateForSaldo();
   }
 
-  // ngOnDestroy() {
-  //   this.filterArticlesByParameter.unsubscribe();
-  //   this.filterArticlesByString.unsubscribe();
-  //   this.returnArticleQuantity.unsubscribe();
+  ngOnDestroy() {
+    this.filterArticlesByParameter.unsubscribe();
+    this.filterArticlesByString.unsubscribe();
+    this.returnArticleQuantity.unsubscribe();
 
-  //   if (this.navigationSubscription) {
-  //     this.navigationSubscription.unsubscribe();
-  //   }
-  // }
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
+    }
+  }
 
   async getDataBaseUpdateTime() {
     await this.articleService.getDataBaseUpdateTime().subscribe(response => {
@@ -141,50 +141,50 @@ export class ArticlesComponent implements OnInit {
 
   async getUpdateForSaldo() {
 
-    // await this.articleService.getUpdateForSaldo().subscribe(response => {
+    await this.articleService.getUpdateForSaldo().subscribe(response => {
 
-    //   if (response.IsSuccess) {
-    //     this.loading = false;
-    //     const updateArticles: Article[] = response.ResponseData;
-    //     if (updateArticles.length > 0) {
-    //       for (let i = 0; i < this.articleListStorage.ArticlesCollection.length; i++) {
-    //         for (let j = 0; j < updateArticles.length; j++) {
-    //           if (this.articleListStorage.ArticlesCollection[i].ArticleNumber === updateArticles[j].ArticleNumber) {
-    //             this.articleListStorage.ArticlesCollection[i].Stock = updateArticles[j].Stock;
-    //           }
-    //         }
-    //         if (i === this.articleListStorage.ArticlesCollection.length) {
-    //           this.getArticleDetails();
-    //           this.loading = false;
-    //         }
-    //       }
-    //     }
-    //   } else {
-    //     console.log('Error for update');
-    //   }
-    // }, error => {
-    //   console.log('Error for update', error);
-    // });
+      if (response.IsSuccess) {
+        this.loading = false;
+        const updateArticles: Article[] = response.ResponseData;
+        if (updateArticles.length > 0) {
+          for (let i = 0; i < this.articleListStorage.ArticlesCollection.length; i++) {
+            for (let j = 0; j < updateArticles.length; j++) {
+              if (this.articleListStorage.ArticlesCollection[i].ArticleNumber === updateArticles[j].ArticleNumber) {
+                this.articleListStorage.ArticlesCollection[i].Stock = updateArticles[j].Stock;
+              }
+            }
+            if (i === this.articleListStorage.ArticlesCollection.length) {
+              this.getArticleDetails();
+              this.loading = false;
+            }
+          }
+        }
+      } else {
+        console.log('Error for update');
+      }
+    }, error => {
+      console.log('Error for update', error);
+    });
   }
 
   getArticleDetails() {
     console.log('OriginalArticleList', this.originalArticleList);
 
-    let endIndex = 0;
+    var endIndex = 0;
     if (this.originalArticleList.length > 50) {
       this.showViewMoreButton = true;
       endIndex = this.pageLoadArticlesCount;
-    } else {
+    }
+    else if(this.viewMoreCount >= this.originalArticleList.length || this.originalArticleList.length <= 50) {
       this.showViewMoreButton = false;
       endIndex = this.originalArticleList.length;
     }
 
-    const articleList = this.originalArticleList.map(x => Object.assign({}, x));
+    let articleList = this.originalArticleList.map(x => Object.assign({}, x));
 
-    this.articleDetail = articleList;
-    // this.articleDetail = articleList.splice(0, endIndex);
+    this.articleDetail = articleList.splice(0, endIndex);
 
-    console.log('LoadArticlesForTheFirstTime', this.articleDetail);
+    console.log("LoadArticlesForTheFirstTime", this.articleDetail);
 
     this.loading = false;
   }
@@ -352,6 +352,7 @@ export class ArticlesComponent implements OnInit {
   }
 
   openModal(template: TemplateRef<any>) {
+    console.log("Welcome text", this.msgTempConfirmText);
     this.modalRef = this.modalService.show(template, { class: 'modal-sm smallPopup modal-dialog-centered' });
   }
 
@@ -383,6 +384,11 @@ export class ArticlesComponent implements OnInit {
     this.cdRef.detach();
     this.cdRef.detectChanges();
     this.cdRef.reattach();
+
+    if (this.viewMoreCount >= this.articleListStorage.ArticlesCollection.length)
+      this.showViewMoreButton = false;
+    else 
+      this.showViewMoreButton = true;
   }
 }
 
